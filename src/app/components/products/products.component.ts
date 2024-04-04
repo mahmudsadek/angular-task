@@ -1,20 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { IProduct } from '../../models/IProduct';
 import { CommonModule } from '@angular/common';
 import { ICategory } from '../../models/ICategory';
 import {FormsModule} from '@angular/forms'
+import { ProductCardDirective } from '../../directives/product-card.directive';
+import { CreditCardPipe } from '../../pipes/credit-card.pipe';
+import { IOrder } from '../../models/Iorder';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,ProductCardDirective,CreditCardPipe],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
-export class ProductsComponent {
+export class ProductsComponent implements OnChanges{
   Products:IProduct[];
-  Categories:ICategory[];
-  selectedCat:number = 0;
+  FilterdProduct:IProduct[];
+  creditcard:string = "00000000";
+  @Input() selectedCat:number = 0;
+  orders:IOrder[] = [];
   constructor() {
     this.Products = [
       {
@@ -90,25 +95,46 @@ export class ProductsComponent {
         catId: 3 // Category ID for smartwatches
       },
     ]
-    this.Categories = [
-      {
-        id:1,
-        name:"Phones"
-      },
-      {
-        id:2,
-        name:"Laptops"
-      },
-      {
-        id:3,
-        name:"Smart Watch"
-      }
-    ]
+    this.FilterdProduct = this.Products;
   }
-  DecreaseQuantity(prod:IProduct) {
-    if(prod.quantity > 0)
+  ngOnChanges(): void {
+    this.FilterProdcut();
+  }
+  Buy(prod:IProduct) {
+    let numOfProductToBuy = document.getElementById(prod.id.toString()) as HTMLInputElement;
+    //console.log(numOfProductToBuy)
+    if(prod.quantity - parseInt(numOfProductToBuy.value) > 0)
     {
-      prod.quantity--;
+      prod.quantity -= parseInt(numOfProductToBuy.value);
+      let found = false;
+      for (let i = 0; i < this.orders.length; i++) {
+        if(prod.id == this.orders[i].id) {
+          found = true;
+          this.orders[i].count += parseInt(numOfProductToBuy.value);
+          this.orders[i].price += parseInt(numOfProductToBuy.value) * prod.price;
+        }
+      }
+      if(!found) {
+        let order = {
+          id:prod.id,
+          name:prod.name,
+          price:prod.price * parseInt(numOfProductToBuy.value),
+          count:parseInt(numOfProductToBuy.value)
+        }
+        this.orders.push(order);
+      }
+    }
+  }
+  UpdateCreditCard(event:Event) {
+    console.log(this.creditcard);
+  }
+
+  FilterProdcut() {
+    if(this.selectedCat == 0) {
+      this.FilterdProduct = this.Products;
+    }
+    else {
+      this.FilterdProduct = this.Products.filter((prod) => prod.catId == this.selectedCat);
     }
   }
 }

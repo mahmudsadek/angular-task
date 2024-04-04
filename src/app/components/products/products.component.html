@@ -1,29 +1,27 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-3 bg-light sidebar" style="min-height:65vh;">
-      <h4 class="mt-4">Filter by Category</h4>
-      <select class="form-select mb-3" [(ngModel)]="selectedCat">
-        <option *ngFor="let cat of Categories" value="{{cat.id}}">{{cat.name}}</option>
-      </select>
-      <!-- Add more filters as needed -->
-    </div>
-    <div class="col-9 my-5">
-      <h2 class="mb-4">Check our New Products!</h2>
-      <div class="row">
-        <ng-container *ngFor="let prd of Products">
-          <div class="col-3 mb-2" *ngIf="prd.quantity > 0 && prd.catId == selectedCat">
-            <div class="card"  [class.bk-ylw]="prd.quantity==1">
-              <img [src]="prd.imgUrl" class="card-img-top" alt="{{prd.name}}">
-              <div class="card-body text-center">
-                <h5 class="card-title mb-3" [title]="prd.name">{{prd.name}}</h5>
-                <p class="card-text mb-2">Quantity: {{prd.quantity}}</p>
-                <p class="card-text mb-4">Price: ${{prd.price}}</p>
-                <button class="btn btn-buy btn-block" (click)="DecreaseQuantity(prd)">Buy Now</button>
-              </div>
+<div>
+  <input type="number" placeholder="Enter Your Credit Card Number" class="form-control w-50" name="creditCard"
+    [(ngModel)]="creditcard" (keyup)="UpdateCreditCard($event)">
+</div>
+<h4>{{creditcard | creditCard}}</h4>
+<div class="row">
+  <ng-container *ngFor="let prd of FilterdProduct">
+    <div class="col-3 mb-2" *ngIf="prd.quantity > 0">
+      <div class="card" [class.bk-ylw]="prd.quantity==1" appProductCard="#EEE">
+        <img [src]="prd.imgUrl" class="card-img-top" alt="{{prd.name}}">
+        <div class="card-body text-center">
+          <h5 class="card-title mb-3" [title]="prd.name">{{prd.name}}</h5>
+          <p class="card-text mb-2">Quantity: {{prd.quantity}}</p>
+          <p class="card-text mb-4">Price: ${{prd.price}}</p>
+          <div class="d-flex">
+            <div class="col-5">
+              <input type="number" name="" id="{{prd.id}}" class="form-control">
+            </div>
+            <div class="col-7">
+              <button class="btn btn-buy btn-block col-7 bx-4" (click)="Buy(prd)">Buy</button>
             </div>
           </div>
-        </ng-container>
+        </div>
       </div>
     </div>
-  </div>
-</div> 
+  </ng-container>
+</div>
