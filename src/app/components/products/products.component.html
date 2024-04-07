@@ -1,13 +1,13 @@
 <div>
-  <input type="number" placeholder="Enter Your Credit Card Number" class="form-control w-50" name="creditCard"
-    [(ngModel)]="creditcard" (keyup)="UpdateCreditCard($event)">
+  <input id="inputEl" type="number" placeholder="Enter Your Credit Card Number" class="form-control w-50" name="creditCard"
+    (blur)="updateCreditCard()">
 </div>
 <h4>{{creditcard | creditCard}}</h4>
 <div class="row">
   <ng-container *ngFor="let prd of FilterdProduct">
     <div class="col-3 mb-2" *ngIf="prd.quantity > 0">
       <div class="card" [class.bk-ylw]="prd.quantity==1" appProductCard="#EEE">
-        <img [src]="prd.imgUrl" class="card-img-top" alt="{{prd.name}}">
+        <img [src]="prd.imgUrl" class="card-img-top" alt="{{prd.name}}" routerLink="/product/{{prd.id}}">
         <div class="card-body text-center">
           <h5 class="card-title mb-3" [title]="prd.name">{{prd.name}}</h5>
           <p class="card-text mb-2">Quantity: {{prd.quantity}}</p>

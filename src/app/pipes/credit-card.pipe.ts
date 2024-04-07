@@ -14,6 +14,7 @@ export class CreditCardPipe implements PipeTransform {
       }
       res += cardNumber[i];
     }
+    console.log(res);
     return res;
   }
 }
