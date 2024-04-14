@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { IProduct } from '../../models/IProduct';
 import { CommonModule } from '@angular/common';
 import { ICategory } from '../../models/ICategory';
@@ -8,6 +8,7 @@ import { CreditCardPipe } from '../../pipes/credit-card.pipe';
 import { IOrder } from '../../models/Iorder';
 import { ProductServiceService } from '../../services/product-service.service';
 import { RouterLink } from '@angular/router';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-products',
@@ -16,14 +17,23 @@ import { RouterLink } from '@angular/router';
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
-export class ProductsComponent implements OnChanges{
-  FilterdProduct:IProduct[];
+export class ProductsComponent implements OnChanges, OnInit {
+  FilterdProduct:IProduct[] = [];
   creditcard:string = "00000000";
   @Input() selectedCat:number = 0;
   orders:IOrder[] = [];
-  constructor(private _productService : ProductServiceService) {
+  constructor(private _productService : ProductService) {
     
-    this.FilterdProduct = _productService.GetAllProducts();
+  }
+  ngOnInit(): void {
+    this._productService.GetAll().subscribe({
+      next:(res)=> {
+        this.FilterdProduct = res;
+      },
+      error:(err) => {
+        console.log(err);
+      } 
+    })
   }
   ngOnChanges(): void {
     this.FilterProdcut();
@@ -67,10 +77,24 @@ export class ProductsComponent implements OnChanges{
 
   FilterProdcut() {
     if(this.selectedCat == 0) {
-      this.FilterdProduct = this._productService.GetAllProducts();
+      this._productService.GetAll().subscribe({
+        next:(res)=> {
+          this.FilterdProduct = res;
+        },
+        error:(err) => {
+          console.log(err);
+        } 
+      });
     }
     else {
-      this.FilterdProduct = this._productService.GetProductByCatId(this.selectedCat);
+      this._productService.GetProductsByCatId(this.selectedCat).subscribe({
+        next:(res)=> {
+          this.FilterdProduct = res;
+        },
+        error:(err) => {
+          console.log(err);
+        } 
+      })
     }
   }
 }

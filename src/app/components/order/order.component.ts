@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ProductsComponent } from '../products/products.component';
 import { ICategory } from '../../models/ICategory';
 import {FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { IOrder } from '../../models/Iorder';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-order',
@@ -12,27 +13,25 @@ import { IOrder } from '../../models/Iorder';
   templateUrl: './order.component.html',
   styleUrl: './order.component.css'
 })
-export class OrderComponent implements AfterViewInit{
-  Categories:ICategory[];
+export class OrderComponent implements AfterViewInit , OnInit{
+  Categories:ICategory[] = [];
   selectedCat:number = 0;
   @ViewChild(ProductsComponent) product: any;
   orders:IOrder[] = [];
-  constructor() {
-    this.Categories = [
-      {
-        id:1,
-        name:"Phones"
-      },
-      {
-        id:2,
-        name:"Laptops"
-      },
-      {
-        id:3,
-        name:"Smart Watch"
-      }
-    ]
+  constructor(private CategoryService:CategoryService) {
+    
   }
+  ngOnInit(): void {
+    this.CategoryService.GetAll().subscribe({
+      next:(res)=>{
+        this.Categories = res;
+      },
+      error:(err)=>{
+        console.log(err)
+      }
+    })
+  }
+
   
   ngAfterViewInit(): void {
     this.orders = this.product.orders;

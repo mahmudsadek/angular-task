@@ -1,0 +1,106 @@
+<div class="container">
+  <h1>Add Product</h1>
+  
+  <form (submit)="Add()" #addproduct="ngForm">
+    <div class="row">
+      <div class="col-md-6">
+       
+        <label for="name" class="form-label">Name</label>
+       
+      </div>
+      <div class="col-md-6">
+        @if(name.touched&&name.invalid)
+        {
+          <div class="text-danger "> 
+            name required
+          </div>
+        }
+        <input required type="text" class="form-control" id="name" name="name" #name="ngModel" [(ngModel)]="Product.name" placeholder="Enter product name">
+      </div>
+     
+   
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <label for="img" class="form-label">Image URL</label>
+      </div>
+      <div class="col-md-6">
+        @if(img.touched&&img.invalid)
+        {
+          <div class="text-danger "> 
+            img required
+          </div>
+        }
+        <input required type="file" class="form-control" id="img" name="img" #img="ngModel" [(ngModel)]="Product.imgUrl" placeholder="Enter image URL">
+      </div>
+     
+    </div>
+  
+    <div class="row">
+      <div class="col-md-6">
+        <label for="price" class="form-label">Price</label>
+      </div>
+      <div class="col-md-6">
+        <div >
+         
+          @if(price.touched&&price.invalid)
+          {
+            <span class="text-danger "> 
+              price required
+            </span>
+          }
+        
+          <input required type="number" class="form-control" name="price" id="price" #price="ngModel" [(ngModel)]="Product.price" placeholder="Enter product price">
+        </div>
+       
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <label for="quantity" class="form-label">Quantity</label>
+      </div>
+      <div class="col-md-6">
+        @if(quantity.touched&& quantity.invalid)
+        {
+          <div class="text-danger "> 
+            quantity required
+          </div>
+        }
+        <input required type="number" class="form-control" name="quantity" id="quantity" #quantity="ngModel" [(ngModel)]="Product.quantity" placeholder="Enter product quantity">
+      </div>
+     
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label for="Category" class="form-label">Category Id</label>
+      </div>
+      <div class="col-md-6">
+        @if(select.touched&& select.invalid)
+        {
+          <div class="text-danger "> 
+            select required
+          </div>
+        }
+        <select required class="form-select" #select="ngModel" [(ngModel)]="Product.catId" name="catId" id="Category">
+          
+          @for (cat of Categories; track cat.id)
+          {
+              <option value={{cat.id}}>{{cat.name}}</option>
+          }
+        
+        
+        </select>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12">
+       
+        <button type="submit" [disabled]="addproduct.invalid" class="btn btn-primary">Add Product</button>
+       
+      </div>
+    </div>
+  </form>
+</div>
